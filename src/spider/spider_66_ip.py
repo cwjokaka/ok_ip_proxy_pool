@@ -1,12 +1,13 @@
 import requests
 
+from src.entity.proxy_entity import ProxyEntity
 from src.spider.abs_spider import AbsSpider
 from bs4 import BeautifulSoup
 
 
 class Spider66Ip(AbsSpider):
     """
-    66IP代理爬虫
+    66IP代理爬虫 刷新速度:🐌慢
     http://www.66ip.cn/
     """
     def __init__(self) -> None:
@@ -14,6 +15,7 @@ class Spider66Ip(AbsSpider):
         self._base_url = 'http://www.66ip.cn'
 
     def do_crawl(self):
+        result = []
         for page in range(1, 5):
             print(f'第{page}页...')
             resp = requests.get(f'{self._base_url}/{page}.html')
@@ -30,3 +32,5 @@ class Spider66Ip(AbsSpider):
                 proxy_type = contents[3].text
                 check_time = contents[4].text
                 print(f'{ip}:{port}/{region}/{proxy_type}/{check_time}')
+                result.append(ProxyEntity(ip, port, self._name, type=proxy_type, region=region))
+        return result
