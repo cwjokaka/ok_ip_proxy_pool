@@ -1,6 +1,6 @@
 class ProxyEntity(object):
 
-    def __init__(self, ip, port, source='', type='', check_count=0, region='', last_check_time=None):
+    def __init__(self, ip: str, port: str, source: str = '', type='', check_count=0, region='', last_check_time=None):
         self._ip = ip
         self._port = port
         self._source = source
