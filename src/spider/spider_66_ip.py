@@ -1,3 +1,5 @@
+from typing import List, Iterable
+
 import requests
 
 from src.entity.proxy_entity import ProxyEntity
@@ -14,10 +16,10 @@ class Spider66Ip(AbsSpider):
         super().__init__('66IP代理爬虫')
         self._base_url = 'http://www.66ip.cn'
 
-    def do_crawl(self):
+    def do_crawl(self) -> List[ProxyEntity]:
         result = []
         for page in range(1, 5):
-            print(f'第{page}页...')
+            # print(f'第{page}页...')
             resp = requests.get(f'{self._base_url}/{page}.html')
             resp.encoding = 'gb2312'
             soup = BeautifulSoup(resp.text, 'lxml')
@@ -34,3 +36,5 @@ class Spider66Ip(AbsSpider):
                 print(f'{ip}:{port}/{region}/{proxy_type}/{check_time}')
                 result.append(ProxyEntity(ip, port, self._name, type=proxy_type, region=region))
         return result
+
+
