@@ -33,8 +33,11 @@ class Spider66Ip(AbsSpider):
                 region = contents[2].text
                 proxy_type = contents[3].text
                 check_time = contents[4].text
-                print(f'{ip}:{port}/{region}/{proxy_type}/{check_time}')
-                result.append(ProxyEntity(ip, port, self._name, type=proxy_type, region=region))
+                # print(f'{ip}:{port}/{region}/{proxy_type}/{check_time}')
+                result.append(ProxyEntity(ip, port,
+                                          source=self._name,
+                                          proxy_type=proxy_type,
+                                          region=region))
         return result
 
 

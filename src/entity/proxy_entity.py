@@ -1,10 +1,29 @@
-class ProxyEntity(object):
+from src.enum.common import ProxyTypeEnum, ProxyCoverEnum
 
-    def __init__(self, ip: str, port: str, source: str = '', type='', check_count=0, region='', last_check_time=None):
+
+class ProxyEntity(object):
+    """
+    ip代理对象
+    :param ip ip地址
+    :param port 端口
+    :param source 代理源头网站名
+    :param proxy_type 代理类型 {@link ProxyType}
+    :param proxy_cover 代理隐蔽性 {@link CoverOfProxy}
+    :param check_count 有效性检验的次数
+    :param last_check_time 最后进行有效性检验的时间
+    """
+    def __init__(self, ip: str, port: str,
+                 source: str = 'unknown',
+                 supplier = 'unknown',
+                 proxy_type: ProxyTypeEnum = ProxyTypeEnum.UNKNOWN,
+                 proxy_cover: ProxyCoverEnum = ProxyCoverEnum.UNKNOWN,
+                 check_count=0, region='', last_check_time=None):
         self._ip = ip
         self._port = port
         self._source = source
-        self._type = type
+        self._supplier = supplier
+        self._proxy_type = proxy_type
+        self._proxy_cover = proxy_cover
         self._check_count = check_count
         self._region = region
         self._last_check_time = last_check_time
@@ -22,8 +41,12 @@ class ProxyEntity(object):
         return self._source
 
     @property
-    def type(self):
-        return self._type
+    def supplier(self):
+        return self._supplier
+
+    @property
+    def proxy_type(self):
+        return self._proxy_type
 
     @property
     def check_count(self):
