@@ -1,7 +1,7 @@
 from src.database.abs_database import AbsDatabase
 
 
-class Memory(AbsDatabase):
+class MemoryDB(AbsDatabase):
     """
     数据库:基于内存实现
     """
@@ -16,3 +16,6 @@ class Memory(AbsDatabase):
 
     def remove(self, key):
         return self._box.pop(key, None)
+
+
+memory_db_instance = MemoryDB()

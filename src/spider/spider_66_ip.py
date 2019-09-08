@@ -3,6 +3,7 @@ from typing import List, Iterable
 import requests
 
 from src.entity.proxy_entity import ProxyEntity
+from src.enum.common import ProxyCoverEnum
 from src.spider.abs_spider import AbsSpider
 from bs4 import BeautifulSoup
 
@@ -31,13 +32,18 @@ class Spider66Ip(AbsSpider):
                 ip = contents[0].text
                 port = contents[1].text
                 region = contents[2].text
-                proxy_type = contents[3].text
-                check_time = contents[4].text
+                proxy_cover = contents[3].text
+                # check_time = contents[4].text
                 # print(f'{ip}:{port}/{region}/{proxy_type}/{check_time}')
                 result.append(ProxyEntity(ip, port,
                                           source=self._name,
-                                          proxy_type=proxy_type,
+                                          proxy_cover=self._judge_proxy_cover(proxy_cover),
                                           region=region))
         return result
 
 
+    def _judge_proxy_cover(self, cover_str: str):
+        if cover_str == '高匿代理':
+            return ProxyCoverEnum.HIGH_COVER
+        else:
+            return ProxyCoverEnum.UNKNOWN
