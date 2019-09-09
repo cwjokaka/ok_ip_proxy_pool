@@ -1,12 +1,8 @@
-# from src.spider.spider_66_ip import Spider66Ip
-# from src.spider.spider_quan_wang_ip import SpiderQuanWangIp
-from src.database.memory_db import *
-
 DB = {
     'db_typy': 'memory'     # memory/redis
 }
 
-# SPIDER_LIST = [Spider66Ip, SpiderQuanWangIp]
+SPIDER_LIST = ['Spider66Ip', 'SpiderQuanWangIp', 'SpiderXiciIp']
 
 
 # 爬虫请求头

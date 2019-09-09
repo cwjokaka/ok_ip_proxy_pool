@@ -8,7 +8,10 @@ from src.enum.common import ProxyTypeEnum, ProxyCoverEnum
 from src.spider.abs_spider import AbsSpider
 from bs4 import BeautifulSoup, Tag
 
+from src.spider.spider_register import spider_register
 
+
+@spider_register
 class SpiderQuanWangIp(AbsSpider):
     """
     全网IP代理爬虫 刷新速度:极快
@@ -85,3 +88,7 @@ class SpiderQuanWangIp(AbsSpider):
             return ProxyCoverEnum.HIGH_COVER
         else:
             return ProxyCoverEnum.UNKNOWN
+
+
+if __name__ == '__main__':
+    pass
