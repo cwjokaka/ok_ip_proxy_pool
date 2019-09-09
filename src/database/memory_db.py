@@ -1,6 +1,16 @@
 from src.database.abs_database import AbsDatabase
 
 
+db_collection = {}
+
+
+def db_register(cls):
+    db_collection.update({cls.__name__: cls()})
+    print(f'注册{cls.__name__}')
+    return cls
+
+
+@db_register
 class MemoryDB(AbsDatabase):
     """
     数据库:基于内存实现
@@ -8,7 +18,7 @@ class MemoryDB(AbsDatabase):
     def __init__(self) -> None:
         self._box = {}
 
-    def put(self, key, value):
+    def set(self, key, value):
         self._box[key] = value
 
     def get(self, key):

@@ -1,6 +1,6 @@
 import unittest
 
-from src.spider.spider_66_ip import Spider66Ip
+from src.spider.spiders import Spider66Ip
 
 
 class TestSpider77Ip(unittest.TestCase):
