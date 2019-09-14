@@ -7,8 +7,8 @@ DB_CONFIG = {
 
 SPIDER_LIST = [
     'Spider66Ip',
-    # 'SpiderQuanWangIp',
-    # 'SpiderXiciIp'
+    'SpiderQuanWangIp',
+    'SpiderXiciIp'
 ]
 
 # 爬虫请求头
