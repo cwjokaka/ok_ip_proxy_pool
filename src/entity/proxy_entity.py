@@ -1,7 +1,25 @@
 from src.enum.common import ProxyTypeEnum, ProxyCoverEnum
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+Base = declarative_base()
 
 
-class ProxyEntity(object):
+class ProxyEntity(Base):
+    # 指定本类映射到users表
+    __tablename__ = 'proxy'
+    # 指定id映射到id字段; id字段为整型，为主键
+    id = Column(Integer, primary_key=True)
+    # 指定name映射到name字段; name字段为字符串类形，
+    ip = Column(String(20))
+    port = Column(String(5))
+    source = Column(String(16))
+    supplier = Column(String(16))
+    proxy_type = Column(Integer())
+    proxy_cover = Column(Integer())
+    check_count = Column(Integer())
+    region = Column(String(32))
+    last_check_time = Column(String(32))
+
     """
     ip代理对象
     :param ip ip地址
@@ -14,48 +32,16 @@ class ProxyEntity(object):
     """
     def __init__(self, ip: str, port: str,
                  source: str = 'unknown',
-                 supplier = 'unknown',
-                 proxy_type: ProxyTypeEnum = ProxyTypeEnum.UNKNOWN,
-                 proxy_cover: ProxyCoverEnum = ProxyCoverEnum.UNKNOWN,
+                 supplier='unknown',
+                 proxy_type: int = ProxyTypeEnum.UNKNOWN.value,
+                 proxy_cover: int = ProxyCoverEnum.UNKNOWN.value,
                  check_count=0, region='', last_check_time=None):
-        self._ip = ip
-        self._port = port
-        self._source = source
-        self._supplier = supplier
-        self._proxy_type = proxy_type
-        self._proxy_cover = proxy_cover
-        self._check_count = check_count
-        self._region = region
-        self._last_check_time = last_check_time
-
-    @property
-    def ip(self):
-        return self._ip
-
-    @property
-    def port(self):
-        return self._port
-
-    @property
-    def source(self):
-        return self._source
-
-    @property
-    def supplier(self):
-        return self._supplier
-
-    @property
-    def proxy_type(self):
-        return self._proxy_type
-
-    @property
-    def check_count(self):
-        return self._check_count
-
-    @property
-    def region(self):
-        return self._region
-
-    @property
-    def last_check_time(self):
-        return self._last_check_time
+        self.ip = ip
+        self.port = port
+        self.source = source
+        self.supplier = supplier
+        self.proxy_type = proxy_type
+        self.proxy_cover = proxy_cover
+        self.check_count = check_count
+        self.region = region
+        self.last_check_time = last_check_time

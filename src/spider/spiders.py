@@ -55,9 +55,9 @@ class Spider66Ip(AbsSpider):
 
     def _judge_proxy_cover(self, cover_str: str):
         if cover_str == '高匿代理':
-            return ProxyCoverEnum.HIGH_COVER
+            return ProxyCoverEnum.HIGH_COVER.value
         else:
-            return ProxyCoverEnum.UNKNOWN
+            return ProxyCoverEnum.UNKNOWN.value
 
 
 @spider_register

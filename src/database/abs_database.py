@@ -1,6 +1,6 @@
 class AbsDatabase(object):
 
-    def set(self, key, value):
+    def set(self, proxy):
         raise RuntimeError('该set方法未实现!')
 
     def get(self, key):
@@ -8,3 +8,6 @@ class AbsDatabase(object):
 
     def remove(self, key):
         raise RuntimeError('该remove方法未实现!')
+
+    def init_db(self):
+        return

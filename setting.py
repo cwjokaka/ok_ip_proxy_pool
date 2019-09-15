@@ -1,15 +1,13 @@
-DB_CONFIG = {
-    'db_type': 'MemoryDB',     # memory/redis
-    'url': '',
-    'username': 'root',
-    'password': 'root'
-}
-
 SPIDER_LIST = [
     'Spider66Ip',
-    'SpiderQuanWangIp',
-    'SpiderXiciIp'
+    # 'SpiderQuanWangIp',
+    # 'SpiderXiciIp'
 ]
+
+DB = {
+    'db_name': 'test.db',
+    'table_name': 'proxy'
+}
 
 # 爬虫请求头
 HEADERS = {
