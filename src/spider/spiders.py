@@ -30,7 +30,7 @@ class Spider66Ip(AbsSpider):
 
     def do_crawl(self) -> List[ProxyEntity]:
         result = []
-        for page in range(1, 7):
+        for page in range(1, 4):
             # print(f'第{page}页...')
             resp = requests.get(f'{self._base_url}/{page}.html')
             resp.encoding = 'gb2312'
@@ -52,8 +52,8 @@ class Spider66Ip(AbsSpider):
                                           region=region))
         return result
 
-
-    def _judge_proxy_cover(self, cover_str: str):
+    @staticmethod
+    def _judge_proxy_cover(cover_str: str):
         if cover_str == '高匿代理':
             return ProxyCoverEnum.HIGH_COVER.value
         else:
@@ -168,7 +168,7 @@ class SpiderXiciIp(AbsSpider):
                     # country = tds[0].find('img')['alt']
                     ip = tds[1].text
                     port = tds[2].text
-                    city = tds[3].text.replace('\n', '')
+                    # city = tds[3].text.replace('\n', '')
                     proxy_cover = tds[4].text
                     proxy_type = tds[5].text
                     result.append(ProxyEntity(ip, port,
@@ -179,7 +179,8 @@ class SpiderXiciIp(AbsSpider):
                                               ))
         return result
 
-    def _judge_proxy_cover(self, cover_str: str):
+    @staticmethod
+    def _judge_proxy_cover(cover_str: str):
         if cover_str == '高匿':
             return ProxyCoverEnum.HIGH_COVER.value
         if cover_str == '透明':
@@ -187,7 +188,8 @@ class SpiderXiciIp(AbsSpider):
         else:
             return ProxyCoverEnum.UNKNOWN.value
 
-    def _judge_proxy_type(self, type_str: str):
+    @staticmethod
+    def _judge_proxy_type(type_str: str):
         if type_str == 'HTTPS':
             return ProxyTypeEnum.HTTPS.value
         if type_str == 'HTTP':

@@ -1,8 +1,11 @@
-SPIDER_LIST = [
-    'Spider66Ip',
-    'SpiderQuanWangIp',
-    'SpiderXiciIp'
-]
+SPIDER = {
+    'crawl_interval': 60,       # 爬取IP代理的间隔(秒)
+    'list': [
+        'Spider66Ip',
+        'SpiderQuanWangIp',
+        'SpiderXiciIp'
+    ]
+}
 
 VALIDATOR = {
     'test_url': 'https://www.baidu.com',
@@ -13,6 +16,11 @@ VALIDATOR = {
 DB = {
     'db_name': 'test.db',
     'table_name': 'proxy'
+}
+
+WEB_SERVER = {
+    'host': 'localhost',
+    'port': '8080'
 }
 
 # 爬虫请求头

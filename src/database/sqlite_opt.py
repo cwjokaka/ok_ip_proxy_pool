@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from setting import DB
 from src.database.abs_database import AbsDatabase
 import sqlite3
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 import traceback
 from src.entity.proxy_entity import ProxyEntity
@@ -47,7 +47,9 @@ class SqliteOpt(AbsDatabase):
         cursor = conn.cursor()
         try:
             cursor.execute(f"""
-            UPDATE {DB["table_name"]} SET reliability = reliability + 1, last_check_time=datetime(CURRENT_TIMESTAMP,'localtime')
+            UPDATE {DB["table_name"]} SET reliability = reliability + 1, 
+            last_check_time=datetime(CURRENT_TIMESTAMP,'localtime'),
+            check_count = check_count + 1
             WHERE ip='{ip}' AND port='{port}' AND protocol='{protocol}'
             """)
             conn.commit()
@@ -60,7 +62,9 @@ class SqliteOpt(AbsDatabase):
         cursor = conn.cursor()
         try:
             cursor.execute(f"""
-            UPDATE {DB["table_name"]} SET reliability = reliability - 1, last_check_time=datetime(CURRENT_TIMESTAMP,'localtime')
+            UPDATE {DB["table_name"]} SET reliability = reliability - 1, 
+            last_check_time=datetime(CURRENT_TIMESTAMP, 'localtime'),
+            check_count = check_count + 1
             WHERE ip='{ip}' AND port='{port}' AND protocol='{protocol}'
             """)
             conn.commit()
@@ -109,6 +113,28 @@ class SqliteOpt(AbsDatabase):
         finally:
             cursor.close()
             conn.close()
+
+    def get_one_in_page(self):
+        session = self._DBSession()
+        try:
+            return session.query(ProxyEntity).order_by(desc(ProxyEntity.reliability)).first()
+        except:
+            print(traceback.format_exc())
+            pass
+        finally:
+            session.close()
+        return None
+
+    def get_all_in_page(self):
+        session = self._DBSession()
+        try:
+            return session.query(ProxyEntity).filter(ProxyEntity.reliability > 0).all()
+        except:
+            print(traceback.format_exc())
+            pass
+        finally:
+            session.close()
+        return None
 
     @staticmethod
     def _get_connect():
