@@ -6,10 +6,10 @@ class AbsDatabase(object):
     def get_all_proxies(self):
         raise NotImplementedError
 
-    def increase_reliability(self, protocol, ip, port):
+    def increase_reliability(self, url):
         raise NotImplementedError
 
-    def reduce_reliability(self, protocol, ip, port):
+    def reduce_reliability(self, url):
         raise NotImplementedError
 
     def remove(self, key):

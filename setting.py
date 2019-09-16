@@ -1,5 +1,5 @@
 SPIDER = {
-    'crawl_interval': 60,       # 爬取IP代理的间隔(秒)
+    'crawl_interval': 75,       # 爬取IP代理的间隔(秒)
     'list': [
         'Spider66Ip',
         'SpiderQuanWangIp',
@@ -9,7 +9,7 @@ SPIDER = {
 }
 
 VALIDATOR = {
-    'test_url': 'https://www.baidu.com',
+    'test_url': 'http://www.baidu.com',
     'request_timeout': 4,
     'validate_interval': 60
 }

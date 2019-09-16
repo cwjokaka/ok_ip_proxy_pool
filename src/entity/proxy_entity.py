@@ -6,10 +6,11 @@ Base = declarative_base()
 
 class ProxyEntity(Base):
     __tablename__ = 'proxy'
-    ip = Column(String(20), primary_key=True)
-    port = Column(String(5), primary_key=True)
+    url = Column(String(36), primary_key=True)
+    # ip = Column(String(20))
+    # port = Column(String(5))
     source = Column(String(16))
-    protocol = Column(String(5))
+    # protocol = Column(String(5))
     supplier = Column(String(16))
     proxy_type = Column(Integer())
     proxy_cover = Column(Integer())
@@ -20,6 +21,7 @@ class ProxyEntity(Base):
 
     """
     ip代理对象
+    :param url url地址
     :param ip ip地址
     :param port 端口
     :param protocol 协议
@@ -30,16 +32,19 @@ class ProxyEntity(Base):
     :param last_check_time 最后进行有效性检验的时间
     :param reliability 代理可靠性, 默认为5
     """
-    def __init__(self, ip: str, port: str,
-                 protocol: str = 'http',
+    def __init__(self, url: str,
+                 # ip: str,
+                 # port: str,
+                 # protocol: str = 'http',
                  source: str = 'unknown',
                  supplier='unknown',
                  proxy_type: int = ProxyTypeEnum.UNKNOWN.value,
                  proxy_cover: int = ProxyCoverEnum.UNKNOWN.value,
                  check_count=0, region='', last_check_time=None, reliability=5):
-        self.ip = ip
-        self.port = port
-        self.protocol = protocol
+        self.url = url
+        # self.ip = ip
+        # self.port = port
+        # self.protocol = protocol
         self.source = source
         self.supplier = supplier
         self.proxy_type = proxy_type

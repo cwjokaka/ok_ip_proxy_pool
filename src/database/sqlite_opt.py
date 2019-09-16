@@ -25,7 +25,7 @@ class SqliteOpt(AbsDatabase):
             result = 1
         except IntegrityError as e:
             # print(traceback.format_exc())
-            print(f'ip:{proxy.ip}:{proxy.port} 已存在')
+            print(f'ip: {proxy.url} 已存在')
         finally:
             # 关闭session:
             session.close()
@@ -42,7 +42,7 @@ class SqliteOpt(AbsDatabase):
             session.close()
         return []
 
-    def increase_reliability(self, protocol, ip, port):
+    def increase_reliability(self, url):
         conn = self._get_connect()
         cursor = conn.cursor()
         try:
@@ -50,14 +50,14 @@ class SqliteOpt(AbsDatabase):
             UPDATE {DB["table_name"]} SET reliability = reliability + 1, 
             last_check_time=datetime(CURRENT_TIMESTAMP,'localtime'),
             check_count = check_count + 1
-            WHERE ip='{ip}' AND port='{port}' AND protocol='{protocol}'
+            WHERE url='{url}'
             """)
             conn.commit()
         finally:
             cursor.close()
             conn.close()
 
-    def reduce_reliability(self, protocol, ip, port):
+    def reduce_reliability(self, url):
         conn = self._get_connect()
         cursor = conn.cursor()
         try:
@@ -65,7 +65,7 @@ class SqliteOpt(AbsDatabase):
             UPDATE {DB["table_name"]} SET reliability = reliability - 1, 
             last_check_time=datetime(CURRENT_TIMESTAMP, 'localtime'),
             check_count = check_count + 1
-            WHERE ip='{ip}' AND port='{port}' AND protocol='{protocol}'
+            WHERE url='{url}'
             """)
             conn.commit()
         except:
@@ -83,9 +83,7 @@ class SqliteOpt(AbsDatabase):
         try:
             cursor.execute(f"""
             create table {DB["table_name"]}(
-            ip varchar(20) not null,
-            port varchar(5) not null, 
-            protocol varchar(5) not null,
+            url varchar(36) not null,
             source varchar(16), 
             supplier varchar(32),
             proxy_type tinyint(3), 
@@ -95,7 +93,7 @@ class SqliteOpt(AbsDatabase):
             last_check_time text,
             create_time text default (datetime(CURRENT_TIMESTAMP,'localtime')),
             reliability integer not null default 0 check(reliability >= 0),
-            PRIMARY KEY ("ip", "port")
+            PRIMARY KEY ("url")
             )
             """)
         except sqlite3.OperationalError as e:

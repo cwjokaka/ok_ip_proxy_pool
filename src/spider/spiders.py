@@ -1,3 +1,4 @@
+import time
 from typing import List
 
 import requests
@@ -46,7 +47,8 @@ class Spider66Ip(AbsSpider):
                 proxy_cover = contents[3].text
                 # check_time = contents[4].text
                 # print(f'{ip}:{port}/{region}/{proxy_type}/{check_time}')
-                result.append(ProxyEntity(ip, port,
+                result.append(ProxyEntity(f'http://{ip}:{port}',
+                                          # ip, port,
                                           source=self._name,
                                           proxy_cover=self._judge_proxy_cover(proxy_cover),
                                           region=region))
@@ -74,7 +76,6 @@ class SpiderQuanWangIp(AbsSpider):
         result = []
         resp = requests.get(self._base_url, headers=HEADERS)
         soup = BeautifulSoup(resp.text, 'lxml')
-        # print(soup.prettify())
         tr_list = soup.find('tbody').find_all('tr')
         for i, tr in enumerate(tr_list):
             tds = tr.find_all('td')
@@ -84,11 +85,9 @@ class SpiderQuanWangIp(AbsSpider):
             proxy_type = tds[2].text
             region = tds[3].contents[1].text
             supplier= tds[4].text
-            # resp_speed = tds[5].text[:-2]
-            # last_check_time = tds[6]
-            # ttl = tds[7]
-            result.append(ProxyEntity(ip, port,
-                                      protocol=proxy_type,
+            result.append(ProxyEntity(f'{proxy_type.lower()}://{ip}:{port}',
+                                      # ip, port,
+                                      # protocol=proxy_type,
                                       source=self._name,
                                       supplier=supplier,
                                       proxy_type=self._judge_proxy_type(proxy_type),
@@ -103,9 +102,7 @@ class SpiderQuanWangIp(AbsSpider):
 
         res = []
         contents = ip_td.find_all(['div', 'span'])
-        # print(len(contents))
         for content in contents:
-            # print(content)
             res.append(content.text)
         res.pop()
         ip = ''.join(res)
@@ -156,7 +153,7 @@ class SpiderXiciIp(AbsSpider):
     def do_crawl(self) -> List[ProxyEntity]:
         result = []
         for base_url in self._base_urls:
-            for page in range(1, 4):
+            for page in range(1, 3):
                 res = requests.get(f'{base_url}/{page}', headers=HEADERS)
                 soup = BeautifulSoup(res.text, 'lxml')
                 tab = soup.find('table', attrs={'id': 'ip_list'})
@@ -171,8 +168,9 @@ class SpiderXiciIp(AbsSpider):
                     # city = tds[3].text.replace('\n', '')
                     proxy_cover = tds[4].text
                     proxy_type = tds[5].text
-                    result.append(ProxyEntity(ip, port,
-                                              protocol=proxy_type.lower(),
+                    result.append(ProxyEntity(f'{proxy_type.lower()}://{ip}:{port}',
+                                              # ip, port,
+                                              # protocol=proxy_type.lower(),
                                               source=self._name,
                                               proxy_cover=self._judge_proxy_cover(proxy_cover),
                                               proxy_type=self._judge_proxy_type(proxy_type),
@@ -201,7 +199,7 @@ class SpiderXiciIp(AbsSpider):
 @spider_register
 class SpiderKuaiDaiLiIp(AbsSpider):
     """
-    西刺代理爬虫 刷新速度: 极快
+    快代理IP 刷新速度: 极快
     https://www.kuaidaili.com/free
     """
     def __init__(self) -> None:
@@ -217,8 +215,7 @@ class SpiderKuaiDaiLiIp(AbsSpider):
             for page in range(1, 4):
                 res = requests.get(f'{base_url}/{page}', headers=HEADERS)
                 soup = BeautifulSoup(res.text, 'lxml')
-                trs = soup.find('table', attrs={'class': 'table table-bordered table-striped'}).find('tbody').find_all('tr')
-                print()
+                trs = soup.find('table').find('tbody').find_all('tr')
                 for tr in trs:
                     tds = tr.find_all('td')
                     ip = tds[0].text
@@ -226,10 +223,13 @@ class SpiderKuaiDaiLiIp(AbsSpider):
                     proxy_cover = tds[2].text
                     proxy_type = tds[3].text
                     region = tds[4].text
-                    result.append(ProxyEntity(ip, port, protocol=proxy_type.lower(), source=self._name,
+                    result.append(ProxyEntity(f'{proxy_type.lower()}://{ip}:{port}',
+                                              # ip, port, protocol=proxy_type.lower(),
+                                              source=self._name,
                                               proxy_type=self._judge_proxy_type(proxy_type),
                                               proxy_cover=self._judge_proxy_cover(proxy_cover),
                                               region=region))
+                time.sleep(3)
         return result
 
     def _judge_proxy_type(self, type_str: str):

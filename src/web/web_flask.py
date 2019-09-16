@@ -10,7 +10,7 @@ def index():
     """主页
     """
     return '''
-    <h1>Welcome Home Page😄</h1>
+    <h1>Welcome to Home Page😄</h1>
     <h2>APIS:</h2>
     <h3>Get a useable proxy:</h3>
     <p>/get</p>
@@ -27,7 +27,7 @@ def get_proxy():
     if proxy:
         return jsonify({
             'code': 200,
-            'proxy': f'{proxy.protocol}://{proxy.ip}:{proxy.port}'
+            'proxy': proxy.url
         })
     else:
         return jsonify({'code': 500, 'msg': 'server error'})
@@ -41,7 +41,7 @@ def get_all_proxy():
     if proxy_list:
         return jsonify({
             'code': 200,
-            'proxies': [f'{proxy.protocol}://{proxy.ip}:{proxy.port}' for proxy in proxy_list]
+            'proxies': [proxy.url for proxy in proxy_list]
         })
     else:
         return jsonify({'code': 500, 'msg': 'server error'})
