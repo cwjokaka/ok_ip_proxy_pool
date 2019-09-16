@@ -13,7 +13,8 @@ class AbsSpider(object):
         try:
             res = self.do_crawl()
             print(f'{self._name}爬取完毕!共:{len(res)}个代理')
-        except:
+        except Exception as e:
+
             return []
         return res
 

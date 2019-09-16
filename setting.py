@@ -3,13 +3,15 @@ SPIDER = {
     'list': [
         'Spider66Ip',
         'SpiderQuanWangIp',
-        'SpiderXiciIp'
+        'SpiderXiciIp',
+        'SpiderKuaiDaiLiIp'
     ]
 }
 
 VALIDATOR = {
     'test_url': 'https://www.baidu.com',
-    'request_timeout': 4
+    'request_timeout': 4,
+    'validate_interval': 60
 }
 
 # sqlite

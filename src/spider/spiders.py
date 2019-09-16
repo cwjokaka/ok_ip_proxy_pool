@@ -196,3 +196,55 @@ class SpiderXiciIp(AbsSpider):
             return ProxyTypeEnum.HTTP.value
         else:
             return ProxyTypeEnum.UNKNOWN.value
+
+
+@spider_register
+class SpiderKuaiDaiLiIp(AbsSpider):
+    """
+    西刺代理爬虫 刷新速度: 极快
+    https://www.kuaidaili.com/free
+    """
+    def __init__(self) -> None:
+        super().__init__('快代理IP代理爬虫')
+        self._base_urls = [
+            'https://www.kuaidaili.com/free/inha',     # 高匿
+            'https://www.kuaidaili.com/free/intr'      # 透明
+            ]
+
+    def do_crawl(self) -> List[ProxyEntity]:
+        result = []
+        for base_url in self._base_urls:
+            for page in range(1, 4):
+                res = requests.get(f'{base_url}/{page}', headers=HEADERS)
+                soup = BeautifulSoup(res.text, 'lxml')
+                trs = soup.find('table', attrs={'class': 'table table-bordered table-striped'}).find('tbody').find_all('tr')
+                print()
+                for tr in trs:
+                    tds = tr.find_all('td')
+                    ip = tds[0].text
+                    port = tds[1].text
+                    proxy_cover = tds[2].text
+                    proxy_type = tds[3].text
+                    region = tds[4].text
+                    result.append(ProxyEntity(ip, port, protocol=proxy_type.lower(), source=self._name,
+                                              proxy_type=self._judge_proxy_type(proxy_type),
+                                              proxy_cover=self._judge_proxy_cover(proxy_cover),
+                                              region=region))
+        return result
+
+    def _judge_proxy_type(self, type_str: str):
+        type_low = type_str.lower()
+        if type_low == 'http':
+            return ProxyTypeEnum.HTTP.value
+        elif type_low == 'https':
+            return ProxyTypeEnum.HTTPS.value
+        else:
+            return ProxyTypeEnum.UNKNOWN.value
+
+    def _judge_proxy_cover(self, cover_str: str):
+        if cover_str == '透明':
+            return ProxyCoverEnum.TRANSPARENT.value
+        elif cover_str == '高匿名':
+            return ProxyCoverEnum.HIGH_COVER.value
+        else:
+            return ProxyCoverEnum.UNKNOWN.value

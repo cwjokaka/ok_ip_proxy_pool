@@ -35,6 +35,6 @@ if __name__ == '__main__':
     init_db()
     scheduler = BackgroundScheduler()
     scheduler.add_job(crawl, 'interval', seconds=SPIDER['crawl_interval'])
-    scheduler.add_job(check, 'interval', seconds=60)
+    scheduler.add_job(check, 'interval', seconds=VALIDATOR['validate_interval'])
     scheduler.start()
     app.run(host=WEB_SERVER['host'], port=WEB_SERVER['port'])
