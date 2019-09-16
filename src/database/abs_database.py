@@ -1,13 +1,19 @@
 class AbsDatabase(object):
 
-    def set(self, proxy):
-        raise RuntimeError('该set方法未实现!')
+    def add_proxy(self, proxy):
+        raise NotImplementedError
 
-    def get(self, key):
-        raise RuntimeError('该get方法未实现!')
+    def get_all_proxies(self):
+        raise NotImplementedError
+
+    def increase_reliability(self, protocol, ip, port):
+        raise NotImplementedError
+
+    def reduce_reliability(self, protocol, ip, port):
+        raise NotImplementedError
 
     def remove(self, key):
-        raise RuntimeError('该remove方法未实现!')
+        raise NotImplementedError
 
     def init_db(self):
         return

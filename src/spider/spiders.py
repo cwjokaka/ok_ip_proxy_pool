@@ -30,7 +30,7 @@ class Spider66Ip(AbsSpider):
 
     def do_crawl(self) -> List[ProxyEntity]:
         result = []
-        for page in range(1, 5):
+        for page in range(1, 7):
             # print(f'第{page}页...')
             resp = requests.get(f'{self._base_url}/{page}.html')
             resp.encoding = 'gb2312'
@@ -88,6 +88,7 @@ class SpiderQuanWangIp(AbsSpider):
             # last_check_time = tds[6]
             # ttl = tds[7]
             result.append(ProxyEntity(ip, port,
+                                      protocol=proxy_type,
                                       source=self._name,
                                       supplier=supplier,
                                       proxy_type=self._judge_proxy_type(proxy_type),
@@ -124,19 +125,19 @@ class SpiderQuanWangIp(AbsSpider):
     def _judge_proxy_type(self, type_str: str):
         type_low = type_str.lower()
         if type_low == 'http':
-            return ProxyTypeEnum.HTTP
+            return ProxyTypeEnum.HTTP.value
         elif type_low == 'https':
-            return ProxyTypeEnum.HTTPS
+            return ProxyTypeEnum.HTTPS.value
         else:
-            return ProxyTypeEnum.UNKNOWN
+            return ProxyTypeEnum.UNKNOWN.value
 
     def _judge_proxy_cover(self, cover_str: str):
         if cover_str == '透明':
-            return ProxyCoverEnum.TRANSPARENT
+            return ProxyCoverEnum.TRANSPARENT.value
         elif cover_str == '高匿':
-            return ProxyCoverEnum.HIGH_COVER
+            return ProxyCoverEnum.HIGH_COVER.value
         else:
-            return ProxyCoverEnum.UNKNOWN
+            return ProxyCoverEnum.UNKNOWN.value
 
 
 @spider_register
@@ -158,7 +159,10 @@ class SpiderXiciIp(AbsSpider):
             for page in range(1, 4):
                 res = requests.get(f'{base_url}/{page}', headers=HEADERS)
                 soup = BeautifulSoup(res.text, 'lxml')
-                tr_list = soup.find('table', attrs={'id': 'ip_list'}).find_all('tr')[1: -1]
+                tab = soup.find('table', attrs={'id': 'ip_list'})
+                if tab is None:
+                    continue
+                tr_list = tab.find_all('tr')[1: -1]
                 for tr in tr_list:
                     tds = tr.find_all('td')
                     # country = tds[0].find('img')['alt']
@@ -168,6 +172,7 @@ class SpiderXiciIp(AbsSpider):
                     proxy_cover = tds[4].text
                     proxy_type = tds[5].text
                     result.append(ProxyEntity(ip, port,
+                                              protocol=proxy_type.lower(),
                                               source=self._name,
                                               proxy_cover=self._judge_proxy_cover(proxy_cover),
                                               proxy_type=self._judge_proxy_type(proxy_type),
@@ -176,16 +181,16 @@ class SpiderXiciIp(AbsSpider):
 
     def _judge_proxy_cover(self, cover_str: str):
         if cover_str == '高匿':
-            return ProxyCoverEnum.HIGH_COVER
+            return ProxyCoverEnum.HIGH_COVER.value
         if cover_str == '透明':
-            return ProxyCoverEnum.TRANSPARENT
+            return ProxyCoverEnum.TRANSPARENT.value
         else:
-            return ProxyCoverEnum.UNKNOWN
+            return ProxyCoverEnum.UNKNOWN.value
 
     def _judge_proxy_type(self, type_str: str):
         if type_str == 'HTTPS':
-            return ProxyTypeEnum.HTTPS
+            return ProxyTypeEnum.HTTPS.value
         if type_str == 'HTTP':
-            return ProxyTypeEnum.HTTP
+            return ProxyTypeEnum.HTTP.value
         else:
-            return ProxyTypeEnum.UNKNOWN
+            return ProxyTypeEnum.UNKNOWN.value

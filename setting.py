@@ -1,9 +1,15 @@
 SPIDER_LIST = [
     'Spider66Ip',
-    # 'SpiderQuanWangIp',
-    # 'SpiderXiciIp'
+    'SpiderQuanWangIp',
+    'SpiderXiciIp'
 ]
 
+VALIDATOR = {
+    'test_url': 'https://www.baidu.com',
+    'request_timeout': 4
+}
+
+# sqlite
 DB = {
     'db_name': 'test.db',
     'table_name': 'proxy'

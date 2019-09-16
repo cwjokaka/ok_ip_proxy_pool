@@ -10,5 +10,5 @@ class TestSpiderQuanWangIp(unittest.TestCase):
 
     def test_crawl(self):
         result = self._spider.crawl()
-        # assert result
-        # assert len(result) > 0
+        assert result
+        assert len(result) > 0

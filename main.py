@@ -1,13 +1,13 @@
 import time
 import typing
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from src.database.sqlite_opt import sqlite_db
+from src.database.sqlite_opt import sqlite_opt
 from src.entity.proxy_entity import ProxyEntity
 from src.spider.spiders import spider_collection
 from setting import SPIDER_LIST
+from src.validator.validator import validator
 
 
 def crawl():
@@ -20,24 +20,23 @@ def crawl():
 
 def save(proxies: typing.List[ProxyEntity]):
     for proxy in proxies:
-        sqlite_db.set(proxy)
+        sqlite_opt.add_proxy(proxy)
 
 
 def init_db():
-    sqlite_db.init_db()
+    sqlite_opt.init_db()
 
 
 def check():
-    print('开始检查')
+    validator.run()
 
 
 if __name__ == '__main__':
     init_db()
-    crawl()
-    # scheduler = BackgroundScheduler()
-    # scheduler.add_job(crawl, 'interval', seconds=5)
-    # scheduler.add_job(check, 'interval', seconds=5)
-    # scheduler.start()
-    # while True:
-    #     print(time.time())
-    #     time.sleep(5)
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(crawl, 'interval', seconds=10)
+    scheduler.add_job(check, 'interval', seconds=15)
+    scheduler.start()
+    while True:
+        print(time.time())
+        time.sleep(5)
