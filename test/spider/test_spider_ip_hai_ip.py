@@ -1,13 +1,13 @@
 import asyncio
 import unittest
 
-from src.spider.spiders import Spider66Ip
+from src.spider.spiders import SpiderIpHaiIp
 
 
-class TestSpider66Ip(unittest.TestCase):
+class TestSpiderXiciIp(unittest.TestCase):
 
     def setUp(self) -> None:
-        self._spider = Spider66Ip()
+        self._spider = SpiderIpHaiIp()
 
     def test_crawl(self):
         result = asyncio.run(self._spider.crawl())

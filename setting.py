@@ -1,25 +1,31 @@
+# 代理爬虫配置
 SPIDER = {
-    'crawl_interval': 75,       # 爬取IP代理的间隔(秒)
-    'list': [
-        # 'Spider66Ip',
-        # 'SpiderQuanWangIp',
+    'crawl_interval': 60,       # 爬取IP代理的间隔(秒)
+    'list': [                   # 使用的代理爬虫(类名)
+        'Spider66Ip',
+        'SpiderQuanWangIp',
         'SpiderXiciIp',
-        # 'SpiderKuaiDaiLiIp'
+        'SpiderKuaiDaiLiIp',
+        'SpiderYunDaiLiIp',
+        'SpiderIpHaiIp',
+        'SpiderMianFeiDaiLiIp'
     ]
 }
 
+# 校验器配置
 VALIDATOR = {
     'test_url': 'http://www.baidu.com',
-    'request_timeout': 4,
-    'validate_interval': 60
+    'request_timeout': 4,           # 校验超时时间
+    'validate_interval': 30
 }
 
-# sqlite
+# 数据库配置
 DB = {
     'db_name': 'test.db',
     'table_name': 'proxy'
 }
 
+# WEB配置(Flask)
 WEB_SERVER = {
     'host': 'localhost',
     'port': '8080'

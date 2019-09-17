@@ -1,6 +1,7 @@
+import asyncio
 import unittest
 
-from src.spider.spider_xici_ip import SpiderXiciIp
+from src.spider.spiders import SpiderXiciIp
 
 
 class TestSpiderXiciIp(unittest.TestCase):
@@ -9,6 +10,6 @@ class TestSpiderXiciIp(unittest.TestCase):
         self._spider = SpiderXiciIp()
 
     def test_crawl(self):
-        result = self._spider.crawl()
+        result = asyncio.run(self._spider.crawl())
         assert result
         assert len(result) > 0
