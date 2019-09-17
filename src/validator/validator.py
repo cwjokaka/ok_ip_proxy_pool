@@ -16,22 +16,18 @@ class Validator(object):
 
     async def valid_proxy(self, proxy_url):
         async with aiohttp.ClientSession() as session:
-            # proxy_url = f'{protocol}://{ip}:{port}'
             try:
                 async with session.get(VALIDATOR['test_url'], proxy=proxy_url,
                                        timeout=VALIDATOR['request_timeout']) as resp:
                     if resp.status == 200:
                         print(f'{proxy_url}可靠')
                         sqlite_opt.increase_reliability(proxy_url)
-                        pass
                     else:
                         print(f'{proxy_url}不可靠')
                         sqlite_opt.reduce_reliability(proxy_url)
-                        pass
             except:
                 sqlite_opt.reduce_reliability(proxy_url)
                 print(f'{proxy_url}不可靠')
-                pass
 
 
 validator = Validator()

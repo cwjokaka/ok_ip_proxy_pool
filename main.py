@@ -1,5 +1,7 @@
+import asyncio
 import typing
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from src.database.sqlite_opt import sqlite_opt
@@ -12,8 +14,17 @@ from src.web.web_flask import app
 
 def crawl():
     proxies = []
+    tasks = []
     for spider_name in SPIDER['list']:
-        proxies.extend(spider_collection[spider_name].crawl())
+        tasks.append(spider_collection[spider_name].crawl())
+        # proxies.extend(spider_collection[spider_name].crawl())
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    results = loop.run_until_complete(asyncio.gather(*tasks))
+    loop.close()
+    for proxies_list in results:
+        proxies.extend(proxies_list)
+    # proxies = loop.run_until_complete(asyncio.gather(*tasks))
     # 持久化
     save(proxies)
 
@@ -34,7 +45,8 @@ def check():
 if __name__ == '__main__':
     init_db()
     scheduler = BackgroundScheduler()
-    scheduler.add_job(crawl, 'interval', seconds=SPIDER['crawl_interval'])
-    scheduler.add_job(check, 'interval', seconds=VALIDATOR['validate_interval'])
+    # scheduler.add_job(crawl, 'interval', seconds=SPIDER['crawl_interval'])
+    scheduler.add_job(crawl, 'interval', seconds=10)
+    # scheduler.add_job(check, 'interval', seconds=VALIDATOR['validate_interval'])
     scheduler.start()
     app.run(host=WEB_SERVER['host'], port=WEB_SERVER['port'])

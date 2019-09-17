@@ -10,12 +10,12 @@ def index():
     """主页
     """
     return '''
-    <h1>Welcome to Home Page😄</h1>
-    <h2>APIS:</h2>
-    <h3>Get a useable proxy:</h3>
-    <p>/get</p>
-    <h3>Get all useable proxies:</h3>
-    <p>/get_all</p>
+        <h1>Welcome to Home Page😄</h1>
+        <h2>APIS:</h2>
+        <h3>Get a usable proxy:</h3>
+        <p>/get</p>
+        <h3>Get all usable proxies:</h3>
+        <p>/get_all</p>
     '''
 
 

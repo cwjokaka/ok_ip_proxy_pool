@@ -1,10 +1,10 @@
 SPIDER = {
     'crawl_interval': 75,       # 爬取IP代理的间隔(秒)
     'list': [
-        'Spider66Ip',
-        'SpiderQuanWangIp',
+        # 'Spider66Ip',
+        # 'SpiderQuanWangIp',
         'SpiderXiciIp',
-        'SpiderKuaiDaiLiIp'
+        # 'SpiderKuaiDaiLiIp'
     ]
 }
 

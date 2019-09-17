@@ -8,16 +8,16 @@ class AbsSpider(object):
     def __init__(self, name='unknown') -> None:
         self._name = name
 
-    def crawl(self):
+    async def crawl(self):
+        res = []
         print(f'{self._name}开始爬取...')
         try:
-            res = self.do_crawl()
-            print(f'{self._name}爬取完毕!共:{len(res)}个代理')
+            res.extend(await self.do_crawl())
+            # print(f'{self._name}爬取完毕!共:{len(res)}个代理')
         except Exception as e:
             print(f'{self._name}爬取失败:e:{e}')
-            return []
         return res
 
-    def do_crawl(self) -> List[ProxyEntity]:
+    async def do_crawl(self) -> List[ProxyEntity]:
         raise NotImplementedError
 

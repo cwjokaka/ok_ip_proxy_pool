@@ -1,6 +1,7 @@
 import time
 from typing import List
 
+import aiohttp
 import requests
 
 from setting import HEADERS
@@ -29,29 +30,28 @@ class Spider66Ip(AbsSpider):
         super().__init__('66IP代理爬虫')
         self._base_url = 'http://www.66ip.cn'
 
-    def do_crawl(self) -> List[ProxyEntity]:
+    async def do_crawl(self) -> List[ProxyEntity]:
         result = []
-        for page in range(1, 4):
+        for page in range(1, 6):
             # print(f'第{page}页...')
-            resp = requests.get(f'{self._base_url}/{page}.html')
-            resp.encoding = 'gb2312'
-            soup = BeautifulSoup(resp.text, 'lxml')
-            tr_list = soup.find('table', attrs={'width': '100%', 'bordercolor': '#6699ff'}).find_all('tr')
-            for i, tr in enumerate(tr_list):
-                if i == 0:
-                    continue
-                contents = tr.contents
-                ip = contents[0].text
-                port = contents[1].text
-                region = contents[2].text
-                proxy_cover = contents[3].text
-                # check_time = contents[4].text
-                # print(f'{ip}:{port}/{region}/{proxy_type}/{check_time}')
-                result.append(ProxyEntity(f'http://{ip}:{port}',
-                                          # ip, port,
-                                          source=self._name,
-                                          proxy_cover=self._judge_proxy_cover(proxy_cover),
-                                          region=region))
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f'{self._base_url}/{page}.html') as resp:
+                    resp.encoding = 'gb2312'
+                    soup = BeautifulSoup(await resp.text(), 'lxml')
+                    tr_list = soup.find('table', attrs={'width': '100%', 'bordercolor': '#6699ff'}).find_all('tr')
+                    for i, tr in enumerate(tr_list):
+                        if i == 0:
+                            continue
+                        contents = tr.contents
+                        ip = contents[0].text
+                        port = contents[1].text
+                        region = contents[2].text
+                        proxy_cover = contents[3].text
+                        result.append(ProxyEntity(f'http://{ip}:{port}',
+                                                  # ip, port,
+                                                  source=self._name,
+                                                  proxy_cover=self._judge_proxy_cover(proxy_cover),
+                                                  region=region))
         return result
 
     @staticmethod
@@ -72,29 +72,30 @@ class SpiderQuanWangIp(AbsSpider):
         super().__init__('全网IP代理爬虫')
         self._base_url = 'http://www.goubanjia.com'
 
-    def do_crawl(self) -> List[ProxyEntity]:
+    async def do_crawl(self) -> List[ProxyEntity]:
         result = []
-        resp = requests.get(self._base_url, headers=HEADERS)
-        soup = BeautifulSoup(resp.text, 'lxml')
-        tr_list = soup.find('tbody').find_all('tr')
-        for i, tr in enumerate(tr_list):
-            tds = tr.find_all('td')
-            id_and_port = tds[0]
-            ip, port = self._parse_ip_and_port(id_and_port)
-            proxy_cover = tds[1].text
-            proxy_type = tds[2].text
-            region = tds[3].contents[1].text
-            supplier= tds[4].text
-            result.append(ProxyEntity(f'{proxy_type.lower()}://{ip}:{port}',
-                                      # ip, port,
-                                      # protocol=proxy_type,
-                                      source=self._name,
-                                      supplier=supplier,
-                                      proxy_type=self._judge_proxy_type(proxy_type),
-                                      proxy_cover=self._judge_proxy_cover(proxy_cover),
-                                      region=region
-                                      )
-                          )
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self._base_url, headers=HEADERS) as resp:
+                soup = BeautifulSoup(await resp.text(), 'lxml')
+                tr_list = soup.find('tbody').find_all('tr')
+                for i, tr in enumerate(tr_list):
+                    tds = tr.find_all('td')
+                    id_and_port = tds[0]
+                    ip, port = self._parse_ip_and_port(id_and_port)
+                    proxy_cover = tds[1].text
+                    proxy_type = tds[2].text
+                    region = tds[3].contents[1].text
+                    supplier = tds[4].text
+                    result.append(ProxyEntity(f'{proxy_type.lower()}://{ip}:{port}',
+                                              # ip, port,
+                                              # protocol=proxy_type,
+                                              source=self._name,
+                                              supplier=supplier,
+                                              proxy_type=self._judge_proxy_type(proxy_type),
+                                              proxy_cover=self._judge_proxy_cover(proxy_cover),
+                                              region=region
+                                              )
+                                  )
         return result
 
 
@@ -116,7 +117,7 @@ class SpiderQuanWangIp(AbsSpider):
             port += (ord(c) - ord('A'))
         port /= 8
         port = int(port)
-        print(f'ip:{ip}, port:{port}')
+        # print(f'ip:{ip}, port:{port}')
         return ip, str(port)
 
     def _judge_proxy_type(self, type_str: str):
@@ -150,32 +151,33 @@ class SpiderXiciIp(AbsSpider):
             'https://www.xicidaili.com/nt'      # 透明
             ]
 
-    def do_crawl(self) -> List[ProxyEntity]:
+    async def do_crawl(self) -> List[ProxyEntity]:
         result = []
         for base_url in self._base_urls:
             for page in range(1, 3):
-                res = requests.get(f'{base_url}/{page}', headers=HEADERS)
-                soup = BeautifulSoup(res.text, 'lxml')
-                tab = soup.find('table', attrs={'id': 'ip_list'})
-                if tab is None:
-                    continue
-                tr_list = tab.find_all('tr')[1: -1]
-                for tr in tr_list:
-                    tds = tr.find_all('td')
-                    # country = tds[0].find('img')['alt']
-                    ip = tds[1].text
-                    port = tds[2].text
-                    # city = tds[3].text.replace('\n', '')
-                    proxy_cover = tds[4].text
-                    proxy_type = tds[5].text
-                    result.append(ProxyEntity(f'{proxy_type.lower()}://{ip}:{port}',
-                                              # ip, port,
-                                              # protocol=proxy_type.lower(),
-                                              source=self._name,
-                                              proxy_cover=self._judge_proxy_cover(proxy_cover),
-                                              proxy_type=self._judge_proxy_type(proxy_type),
-                                              ))
-        return result
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(f'{base_url}/{page}', headers=HEADERS) as resp:
+                        soup = BeautifulSoup(await resp.text(), 'lxml')
+                        tab = soup.find('table', attrs={'id': 'ip_list'})
+                        if tab is None:
+                            continue
+                        tr_list = tab.find_all('tr')[1: -1]
+                        for tr in tr_list:
+                            tds = tr.find_all('td')
+                            # country = tds[0].find('img')['alt']
+                            ip = tds[1].text
+                            port = tds[2].text
+                            # city = tds[3].text.replace('\n', '')
+                            proxy_cover = tds[4].text
+                            proxy_type = tds[5].text
+                            result.append(ProxyEntity(f'{proxy_type.lower()}://{ip}:{port}',
+                                                      # ip, port,
+                                                      # protocol=proxy_type.lower(),
+                                                      source=self._name,
+                                                      proxy_cover=self._judge_proxy_cover(proxy_cover),
+                                                      proxy_type=self._judge_proxy_type(proxy_type),
+                                                      ))
+                return result
 
     @staticmethod
     def _judge_proxy_cover(cover_str: str):
