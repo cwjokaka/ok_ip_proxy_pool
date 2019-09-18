@@ -6,6 +6,7 @@ import aiohttp
 from setting import HEADERS
 from src.entity.proxy_entity import ProxyEntity
 from src.enum.common import ProxyCoverEnum, ProxyTypeEnum
+from src.log.logger import logger
 from src.spider.abs_spider import AbsSpider
 from bs4 import BeautifulSoup, Tag
 
@@ -15,7 +16,7 @@ spider_collection = {}
 
 def spider_register(cls):
     spider_collection.update({cls.__name__: cls()})
-    print(f'注册{cls.__name__}')
+    logger.info(f'注册{cls.__name__}')
     return cls
 
 
