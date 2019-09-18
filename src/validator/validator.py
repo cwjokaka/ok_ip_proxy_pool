@@ -20,14 +20,14 @@ class Validator(object):
                 async with session.get(VALIDATOR['test_url'], proxy=proxy_url,
                                        timeout=VALIDATOR['request_timeout']) as resp:
                     if resp.status == 200:
-                        print(f'{proxy_url}可靠')
+                        # print(f'{proxy_url}可靠')
                         sqlite_opt.increase_reliability(proxy_url)
                     else:
-                        print(f'{proxy_url}不可靠')
+                        # print(f'{proxy_url}不可靠')
                         sqlite_opt.reduce_reliability(proxy_url)
             except:
                 sqlite_opt.reduce_reliability(proxy_url)
-                print(f'{proxy_url}不可靠')
+                # print(f'{proxy_url}不可靠')
 
 
 validator = Validator()

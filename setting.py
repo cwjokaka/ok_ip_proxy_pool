@@ -21,7 +21,7 @@ VALIDATOR = {
 
 # 数据库配置
 DB = {
-    'db_name': 'test.db',
+    'db_name': 'proxy.db',
     'table_name': 'proxy'
 }
 

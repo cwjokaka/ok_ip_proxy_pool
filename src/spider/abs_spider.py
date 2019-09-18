@@ -1,6 +1,7 @@
 from typing import List
 
 from src.entity.proxy_entity import ProxyEntity
+from src.log.logger import logger
 
 
 class AbsSpider(object):
@@ -10,11 +11,11 @@ class AbsSpider(object):
 
     async def crawl(self):
         res = []
-        print(f'{self._name}开始爬取...')
+        logger.info(f'{self._name}开始爬取...')
         try:
             res.extend(await self.do_crawl())
         except Exception as e:
-            print(f'{self._name}爬取失败:e:{e}')
+            logger.exception(f'{self._name}爬取失败:e:{e}')
         return res
 
     async def do_crawl(self) -> List[ProxyEntity]:

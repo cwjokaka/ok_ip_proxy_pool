@@ -2,12 +2,11 @@ from sqlalchemy.exc import IntegrityError
 
 from setting import DB
 from src.database.abs_database import AbsDatabase
-import sqlite3
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
-import traceback
 from src.entity.proxy_entity import ProxyEntity
-
+from src.log.logger import logger
+import sqlite3
 
 class SqliteOpt(AbsDatabase):
 
@@ -24,8 +23,7 @@ class SqliteOpt(AbsDatabase):
             session.commit()
             result = 1
         except IntegrityError as e:
-            # print(traceback.format_exc())
-            print(f'ip: {proxy.url} 已存在')
+            logger.info(f'ip: {proxy.url} 已存在')
         finally:
             # 关闭session:
             session.close()
@@ -35,8 +33,8 @@ class SqliteOpt(AbsDatabase):
         session = self._DBSession()
         try:
             return session.query(ProxyEntity).all()
-        except:
-            print(traceback.format_exc())
+        except Exception as e:
+            logger.exception(e)
             pass
         finally:
             session.close()
@@ -53,6 +51,9 @@ class SqliteOpt(AbsDatabase):
             WHERE url='{url}'
             """)
             conn.commit()
+        except Exception as e:
+            pass
+            # logger.exception(e)
         finally:
             cursor.close()
             conn.close()
@@ -68,8 +69,9 @@ class SqliteOpt(AbsDatabase):
             WHERE url='{url}'
             """)
             conn.commit()
-        except:
+        except Exception as e:
             pass
+            # logger.exception(e)
         finally:
             cursor.close()
             conn.close()
@@ -89,15 +91,16 @@ class SqliteOpt(AbsDatabase):
             proxy_type tinyint(3), 
             proxy_cover tinyint(3), 
             check_count int(10), 
-            region varchar(20), 
+            region varchar(36), 
             last_check_time text,
             create_time text default (datetime(CURRENT_TIMESTAMP,'localtime')),
-            reliability integer not null default 0 check(reliability >= 0),
+            reliability integer not null default 0 check(reliability >= 0) check(reliability <= 15),
             PRIMARY KEY ("url")
             )
             """)
         except sqlite3.OperationalError as e:
-            print(e)
+            logger.warn(e)
+            # logger.exception(e)
         finally:
             cursor.close()
             conn.close()
@@ -116,9 +119,8 @@ class SqliteOpt(AbsDatabase):
         session = self._DBSession()
         try:
             return session.query(ProxyEntity).order_by(desc(ProxyEntity.reliability)).first()
-        except:
-            print(traceback.format_exc())
-            pass
+        except Exception as e:
+            logger.exception(e)
         finally:
             session.close()
         return None
@@ -127,9 +129,8 @@ class SqliteOpt(AbsDatabase):
         session = self._DBSession()
         try:
             return session.query(ProxyEntity).filter(ProxyEntity.reliability > 0).all()
-        except:
-            print(traceback.format_exc())
-            pass
+        except Exception as e:
+            logger.exception(e)
         finally:
             session.close()
         return None
@@ -137,7 +138,6 @@ class SqliteOpt(AbsDatabase):
     @staticmethod
     def _get_connect():
         return sqlite3.connect(DB['db_name'])
-        # return conn.cursor()
 
 
 sqlite_opt = SqliteOpt()
