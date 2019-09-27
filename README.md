@@ -3,7 +3,7 @@
 
 
 
-## 运行环境:
+## 运行环境
 
 - python 3.7
 
@@ -12,9 +12,9 @@
 ## 特点
 
 - 异步爬取&验证代理🚀
-- 使用Sqlite,无需额外数据库环境🛴
-
-- 目前支持的代理有: 免费代理/全网/66/西刺/快代理/云代理/IP海
+- 用权重加减来衡量代理的可用性(可用性:通过验证则+1,否则-1)🎭
+- 使用Sqlite,无需安装数据库环境🛴
+- 目前支持的免费代理有: 免费代理/全网/66/西刺/快代理/云代理/IP海
 
 
 
@@ -55,9 +55,9 @@ SPIDER = {
 
 # 校验器配置
 VALIDATOR = {
-    'test_url': 'http://www.baidu.com',
+    'test_url': 'http://www.baidu.com',	# 验证url
     'request_timeout': 4,           # 校验超时时间
-    'validate_interval': 30
+    'validate_interval': 30			# 验证时间间隔(秒)
 }
 
 # 数据库配置
@@ -100,6 +100,16 @@ HEADERS = {
 |    /     |  GET   |   首页介绍   |
 |   /get   |  GET   | 获取一个代理 |
 | /get_all |  GET   | 获取所有代理 |
+
+
+
+## 代理爬虫扩展
+如果需要添加自定义代理爬虫,可通过以下步骤添加:
+
+1. 进入src/spider/spiders.py
+2. 添加自己的爬虫类，继承AbsSpider，实现它的do_crawl方法。注:请求需要**异步调用**❗
+3. 用@spider_register修饰此类
+4. 在配置文件setting.py的SPIDER['list']中添加此类名
 
 
 
