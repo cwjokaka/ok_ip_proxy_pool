@@ -3,7 +3,7 @@ import logging
 
 def get_logger():
     """
-    创建日志实例
+    创建日志单例
     """
     formatter = logging.Formatter("%(asctime)s %(name)s:%(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
     logger = logging.getLogger("monitor")

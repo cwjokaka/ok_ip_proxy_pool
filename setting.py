@@ -27,7 +27,7 @@ DB = {
 
 # WEB配置(Flask)
 WEB_SERVER = {
-    'host': 'localhost',
+    'host': '0.0.0.0',
     'port': '8080'
 }
 
