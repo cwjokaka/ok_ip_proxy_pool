@@ -56,8 +56,8 @@ SPIDER = {
 # 校验器配置
 VALIDATOR = {
     'test_url': 'http://www.baidu.com',	# 验证url
-    'request_timeout': 4,           # 校验超时时间
-    'validate_interval': 30			# 验证时间间隔(秒)
+    'request_timeout': 4,               # 校验超时时间
+    'validate_interval': 30			        # 验证时间间隔(秒)
 }
 
 # 数据库配置
