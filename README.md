@@ -37,11 +37,10 @@
 
 
 ## 配置文件
-
 ```python
 # 代理爬虫配置
 SPIDER = {
-    'crawl_interval': 60,       # 爬取IP代理的间隔(秒)
+    'crawl_interval': 120,       # 爬取IP代理的间隔(秒)
     'list': [                   # 使用的代理爬虫(类名)
         'Spider66Ip',
         'SpiderQuanWangIp',
@@ -55,20 +54,28 @@ SPIDER = {
 
 # 校验器配置
 VALIDATOR = {
-    'test_url': 'http://www.baidu.com',	# 验证url
-    'request_timeout': 4,               # 校验超时时间
-    'validate_interval': 30			        # 验证时间间隔(秒)
+    'test_url': 'http://www.baidu.com',     # 可用校验url
+    'request_timeout': 4,           # 校验超时时间
+    'validate_interval': 60         # 校验间隔(秒)
+}
+
+# 匿名性校验配置
+ANONYMITY_VALIDATOR = {
+    'http_test_url': 'http://httpbin.org/get',      # 匿名校验url
+    'https_test_url': 'https://httpbin.org/get',
+    'request_timeout': 4,                           # 校验最大超时时间
+    'interval': 180                                 # 校验间隔(秒)
 }
 
 # 数据库配置
 DB = {
-    'db_name': 'test.db',
+    'db_name': 'proxy.db',
     'table_name': 'proxy'
 }
 
 # WEB配置(Flask)
 WEB_SERVER = {
-    'host': 'localhost',
+    'host': '0.0.0.0',
     'port': '8080'
 }
 
