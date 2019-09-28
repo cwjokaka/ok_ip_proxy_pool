@@ -5,6 +5,7 @@ from src.database.abs_database import AbsDatabase
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from src.entity.proxy_entity import ProxyEntity
+from src.enum.common import ProxyCoverEnum
 from src.log.logger import logger
 import sqlite3
 
@@ -35,7 +36,19 @@ class SqliteOpt(AbsDatabase):
             return session.query(ProxyEntity).all()
         except Exception as e:
             logger.exception(e)
-            pass
+        finally:
+            session.close()
+        return []
+
+    def get_unknown_anonymity_proxies(self):
+        session = self._DBSession()
+        try:
+            return (session.query(ProxyEntity)
+                    .filter(ProxyEntity.reliability > 0)
+                    .filter(ProxyEntity.proxy_cover == ProxyCoverEnum.UNKNOWN.value)
+                    .all())
+        except Exception as e:
+            logger.exception(e)
         finally:
             session.close()
         return []
@@ -78,6 +91,21 @@ class SqliteOpt(AbsDatabase):
 
     def remove(self, key):
         return super().remove(key)
+
+    def update_anonymity(self, url, value):
+        conn = self._get_connect()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(f"""
+            UPDATE {DB["table_name"]} SET proxy_cover = {value}
+            WHERE url='{url}'
+            """)
+            conn.commit()
+        except Exception as e:
+            logger.exception(e)
+        finally:
+            cursor.close()
+            conn.close()
 
     def init_db(self):
         conn = self._get_connect()

@@ -10,13 +10,12 @@ class AbsSpider(object):
         self._name = name
 
     async def crawl(self):
-        res = []
         logger.info(f'{self._name}开始爬取...')
         try:
-            res.extend(await self.do_crawl())
+            return await self.do_crawl()
         except Exception as e:
             logger.exception(f'{self._name}爬取失败:e:{e}')
-        return res
+        return []
 
     async def do_crawl(self) -> List[ProxyEntity]:
         raise NotImplementedError

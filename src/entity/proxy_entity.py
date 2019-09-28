@@ -1,11 +1,12 @@
 from src.enum.common import ProxyTypeEnum, ProxyCoverEnum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
+from setting import DB
 Base = declarative_base()
 
 
 class ProxyEntity(Base):
-    __tablename__ = 'proxy'
+    __tablename__ = DB['table_name']
     url = Column(String(36), primary_key=True)
     # ip = Column(String(20))
     # port = Column(String(5))
