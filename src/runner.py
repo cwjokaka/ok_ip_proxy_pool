@@ -18,7 +18,6 @@ def crawl():
     tasks = []
     for spider_name in SPIDER['list']:
         tasks.append(spider_collection[spider_name].crawl())
-        # proxies.extend(spider_collection[spider_name].crawl())
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     results = loop.run_until_complete(asyncio.gather(*tasks))

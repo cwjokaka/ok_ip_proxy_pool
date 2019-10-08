@@ -13,7 +13,7 @@ def index():
         <h1>😘Welcome to Home Page😄</h1>
         <h1>🙆‍♂️🤷‍♀️🙆‍♂️🤷‍♀️🙆‍♂️🤷‍♀️🙆‍♂️🤷‍♀️🙆‍♂️🤷‍♀️🙆‍♂️🤷‍♀️🙆‍♂️🤷‍♀️</h1>
         <h2>APIs:</h2>
-        <h3>Get a usable proxy:</h3>
+        <h3>Get an usable proxy:</h3>
         <p>/get</p>
         <h3>Get all usable proxies:</h3>
         <p>/get_all</p>
