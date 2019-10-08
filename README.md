@@ -114,7 +114,7 @@ HEADERS = {
 如果需要添加自定义代理爬虫,可通过以下步骤添加:
 
 1. 进入src/spider/spiders.py
-2. 添加自己的爬虫类，继承AbsSpider，实现它的do_crawl方法。注:请求需要**异步调用**❗
+2. 添加自己的爬虫类，继承AbsSpider，实现它的do_crawl & get_page_range & get_urls方法，按需重写其他方法。
 3. 用@spider_register修饰此类
 4. 在配置文件setting.py的SPIDER['list']中添加此类名
 
