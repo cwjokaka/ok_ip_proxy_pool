@@ -7,7 +7,8 @@ from src.database.sqlite_opt import sqlite_opt
 from src.entity.proxy_entity import ProxyEntity
 from src.log.logger import logger
 from src.spider.spiders import spider_collection
-from setting import WEB_SERVER, VALIDATOR, SPIDER, ANONYMITY_VALIDATOR
+from setting import WEB_SERVER, VALIDATOR, SPIDER, ANONYMITY_VALIDATOR, EXPIRATION_VALIDATOR
+from src.validator.expiration_validator import expiration_validator
 from src.validator.validator import validator
 from src.validator.anonymity_validator import anonymity_validator
 from src.web.web_flask import app
@@ -41,5 +42,6 @@ def run():
     scheduler.add_job(crawl, 'interval', seconds=SPIDER['crawl_interval'])
     scheduler.add_job(validator.run, 'interval', seconds=VALIDATOR['validate_interval'])
     scheduler.add_job(anonymity_validator.run, 'interval', seconds=ANONYMITY_VALIDATOR['interval'])
+    scheduler.add_job(expiration_validator.run, 'interval', seconds=EXPIRATION_VALIDATOR['interval'])
     scheduler.start()
     app.run(host=WEB_SERVER['host'], port=WEB_SERVER['port'])

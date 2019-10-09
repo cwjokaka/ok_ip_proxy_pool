@@ -21,5 +21,8 @@ class AbsDatabase(object):
     def remove(self, key):
         raise NotImplementedError
 
+    def remove_all_zero_reliability(self):
+        raise NotImplementedError
+
     def init_db(self):
         return

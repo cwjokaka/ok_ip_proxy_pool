@@ -21,3 +21,6 @@ class TestSqliteOpt(unittest.TestCase):
     def test_get_all_proxies(self):
         proxy_list = self._opt.get_all_proxies()
         assert len(proxy_list) > 0
+
+    def test_remove_all_zero_reliability(self):
+        self._opt.remove_all_zero_reliability()

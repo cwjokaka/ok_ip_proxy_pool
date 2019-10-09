@@ -27,6 +27,11 @@ ANONYMITY_VALIDATOR = {
     'interval': 180                                 # 校验间隔(秒)
 }
 
+# 清除不可用代理配置
+EXPIRATION_VALIDATOR = {
+    'interval': 60 * 30
+}
+
 # 数据库配置
 DB = {
     'db_name': 'proxy.db',

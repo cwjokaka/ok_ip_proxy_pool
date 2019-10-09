@@ -128,7 +128,6 @@ class SqliteOpt(AbsDatabase):
             """)
         except sqlite3.OperationalError as e:
             logger.warn(e)
-            # logger.exception(e)
         finally:
             cursor.close()
             conn.close()
@@ -162,6 +161,21 @@ class SqliteOpt(AbsDatabase):
         finally:
             session.close()
         return None
+
+    def remove_all_zero_reliability(self):
+        conn = self._get_connect()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(f"""
+            DELETE FROM {DB["table_name"]}
+            WHERE reliability = 0
+            """)
+            conn.commit()
+        except sqlite3.OperationalError as e:
+            logger.warn(e)
+        finally:
+            cursor.close()
+            conn.close()
 
     @staticmethod
     def _get_connect():

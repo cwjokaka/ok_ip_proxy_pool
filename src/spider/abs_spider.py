@@ -12,13 +12,12 @@ class AbsSpider(object):
 
     def __init__(self, name='unknown') -> None:
         self._name = name
-        self.urls = self.get_urls()
+        self._urls = self.get_urls()
 
     async def crawl(self):
         logger.info(f'{self._name}开始爬取...')
-        urls = self.get_urls()
         res = []
-        for url in urls:
+        for url in self._urls:
             try:
                 for page in self.get_page_range():
                     async with aiohttp.ClientSession() as session:
