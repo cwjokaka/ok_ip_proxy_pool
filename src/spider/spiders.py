@@ -409,10 +409,10 @@ class SpiderMianFeiDaiLiIp(AbsSpider):
             if i == 0:
                 continue
             tds = tr.find_all('td')
-            ip = tds[1].text
-            port = tds[2].text
-            proxy_cover = tds[3].text
-            proxy_type = tds[4].text if tds[3].text != '' else 'http'
+            ip = tds[0].text
+            port = tds[1].text
+            proxy_cover = tds[2].text
+            proxy_type = tds[3].text if tds[3].text != '' else 'http'
             region = tds[5].text
             supplier = tds[6].text
             result.append(ProxyEntity(f'{proxy_type.lower()}://{ip}:{port}',
